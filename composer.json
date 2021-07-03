@@ -1,0 +1,16 @@
+{
+    "name": "bera/bera-carousel",
+    "description": "Plugin for image carousel",
+    "autoload": {
+        "psr-4": {
+            "Bera\\BeraCarousel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Joy Kumar Bera",
+            "email": "joykumarbera@gmail.com"
+        }
+    ],
+    "require": {}
+}

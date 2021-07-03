@@ -1,0 +1,1 @@
+# A plugin for woocommerce product slider
