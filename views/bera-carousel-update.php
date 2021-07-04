@@ -9,11 +9,12 @@
         <label>Choose category</label>
         <select class="bera-woo-multiple-cat" name="bera_carousel_cat[]" multiple="multiple">
             <?php foreach( $product_categoires as $cat ) : ?>
-                <option value="<?php echo $cat->term_id ?>" <?php echo ( in_array( $cat->term_id, $categorires ) ) ? 'selected': '' ?>><?php echo $cat->name ?></option>
+                <option value="<?php echo $cat->term_id ?>" <?php echo ( in_array( $cat->term_id, (array)$categorires ) ) ? 'selected': '' ?>><?php echo $cat->name ?></option>
             <?php endforeach ?>
         </select>
     <?php else : ?>
     <?php endif ?>
 </div>
+
 <?php submit_button('Update', 'primary', 'update') ?>
 <?php submit_button('Delete', 'danger', 'delete') ?>

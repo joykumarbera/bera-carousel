@@ -72,4 +72,8 @@ class Plugin
     public function get_plugin_menu_slug() {
         return str_replace(' ', '-', strtolower( $this->_plugin_name ) );
     }
+
+    public function get_plugin_sub_menu_slug() {
+        return $this->get_plugin_menu_slug() . '-add-new';
+    }
 }

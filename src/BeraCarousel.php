@@ -42,13 +42,19 @@ class BeraCarousel {
     }
 
     /**
+     * Create new instance
+     */
+    public static function get_instance( $data ) {
+        return new self( $data );
+    }
+    /**
      * Check if model is new or not
      * 
      * @return bool
      */
     public function is_new() {
 
-        return ( !is_null( $this->id ) && $this->id != ''  ) ? true : false;
+        return ( $this->id == ''  ) ? true : false;
     }
 
     /**
@@ -125,14 +131,14 @@ class BeraCarousel {
         }
 
         $meta_data = self::get_carousel_meta_data( $post->ID );
-
+        
         $data = array(
             'id' => $post->ID,
             'title' => $post->post_title,
             'meta_data' => $meta_data
         );
 
-        return new self( $data );
+        return self::get_instance( $data );
     }
 
     public static function get_total_set() {
@@ -148,7 +154,7 @@ class BeraCarousel {
         self::$_total_data = $query->found_posts;
         while( $query->have_posts() ) {
             $query->the_post();
-            $data_sets[] = new self(
+            $data_sets[] = self::get_instance(
                     array(
                     'id' => $query->post->ID,
                     'title' => $query->post->post_title,
@@ -168,5 +174,68 @@ class BeraCarousel {
      */
     public static function get_carousel_meta_data( $id ) {
         return get_post_meta( $id, self::CAROUSEL_META_KEY, true);
+    }
+
+    /**
+     * Add or update a post
+     * 
+     * @return int
+     */
+    public function save() {
+        
+        $post_id = '';
+
+        if( $this->validate() ) {
+
+            if( $this->is_new() ) {
+                $post_id = wp_insert_post( 
+                        array(
+                        'post_title' => $this->title,
+                        'post_type' => self::POST_TYPE
+                    )
+                );
+            }
+            else {
+                $post_id = wp_update_post( 
+                        array(
+                        'ID' => $this->id,
+                        'post_title' => $this->title,
+                        'post_type' => self::POST_TYPE
+                    )
+                );
+            }
+
+            update_post_meta(
+                $post_id,
+                self::CAROUSEL_META_KEY,
+                $this->meta_data
+            );
+        }
+
+        return $post_id;
+    }
+
+    /**
+     * Validates post data
+     * 
+     * @return bool
+     */
+    public function validate() {
+
+        return true;
+    }
+
+    /**
+     * Delete a post
+     * 
+     * @return int
+     */
+    public function delete() {
+        $post_id = '';
+        if( ! $this->is_new() ) {
+            $post_id = wp_delete_post( $this->id );
+        }
+
+        return $post_id;
     }
 }

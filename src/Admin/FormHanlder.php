@@ -2,6 +2,8 @@
 
 namespace Bera\BeraCarousel\Admin;
 
+use Bera\BeraCarousel\BeraCarousel;
+
 class FormHanlder {
 
     /**
@@ -13,67 +15,42 @@ class FormHanlder {
 
     public function handle_bera_carousel_crud() {
 
+        $bera_carousel =BeraCarousel::get_instance(
+            array(
+                'id' => ( isset( $_POST['post_id'] ) ) ?  $_POST['post_id'] : '',
+                'title' => $_POST['bera_carousel_title'],
+                'meta_data' => $_POST['bera_carousel_cat']
+            )
+        );
+
         if( isset( $_REQUEST['add'] ) ) {
-            $post_id = wp_insert_post( 
+            $post_id = $bera_carousel->save();
+            wp_redirect( 
+                add_query_arg(
                     array(
-                    'post_title' => $_POST['bera_carousel_title'],
-                    'post_type' => 'bera_carousel'
+                        'page' => 'bera-carousel-add-new',
+                        'post_id' => $post_id,
+                        'message' => 'added',
+                    ),
+                    admin_url() . 'admin.php'
                 )
             );
-
-            if( $post_id ) {
-                update_post_meta(
-                    $post_id,
-                    '_bera_carousel_cat_id',
-                    $_POST['bera_carousel_cat']
-                );
-
-                wp_redirect( 
-                    add_query_arg(
-                        array(
-                            'page' => 'bera-carousel-add-new',
-                            'post_id' => $post_id,
-                            'message' => 'added',
-                        ),
-                        admin_url() . 'admin.php'
-                    )
-                );
-            }
         } else if( isset( $_REQUEST['update'] ) ) {
-            $post_id = wp_update_post( 
+            $post_id = $bera_carousel->save();
+            wp_redirect( 
+                add_query_arg(
                     array(
-                    'ID' => $_POST['post_id'],
-                    'post_title' => $_POST['bera_carousel_title'],
-                    'post_type' => 'bera_carousel'
+                        'page' => 'bera-carousel-add-new',
+                        'post_id' => $post_id,
+                        'message' => 'updated',
+                    ),
+                    admin_url() . 'admin.php'
                 )
             );
 
-            if( $post_id ) {
-
-                update_post_meta(
-                    $post_id,
-                    '_bera_carousel_cat_id',
-                    $_POST['bera_carousel_cat']
-                );
-    
-    
-                wp_redirect( 
-                    add_query_arg(
-                        array(
-                            'page' => 'bera-carousel-add-new',
-                            'post_id' => $post_id,
-                            'message' => 'updated',
-                        ),
-                        admin_url() . 'admin.php'
-                    )
-                );
-
-            }
         } else if( isset( $_REQUEST['delete'] ) ) {
-            
-            $post = wp_delete_post( $_POST['post_id']  );
-
-            if( $post ) {
+            $post_id = $bera_carousel->delete();
+            if( $post_id ) {
                 wp_redirect( 
                     add_query_arg(
                         array(

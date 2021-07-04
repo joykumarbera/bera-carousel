@@ -38,7 +38,7 @@ class AssetManager
     public function load_admin_assets() {
 
         if( isset( $_GET['page'] ) ) {
-            if( $_GET['page'] ==  $this->_plugin->get_plugin_menu_slug() . '-add-new' ) {
+            if( $_GET['page'] ==  $this->_plugin->get_plugin_sub_menu_slug() ) {
                 wp_enqueue_script( 'select2-min-js', BERA_CAROUSEL_PLUGIN_URL . 'assets/select2/select2.min.js', [ 'jquery' ], false, true);
                 wp_enqueue_style( 'select2-min-css', BERA_CAROUSEL_PLUGIN_URL . 'assets/select2/select2.min.css', [], false );
                 wp_enqueue_style( 'bera', BERA_CAROUSEL_PLUGIN_URL . 'assets/css/bera.css', [], false );

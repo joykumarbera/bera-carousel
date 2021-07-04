@@ -36,7 +36,7 @@ class AdminMenu
             $this->_plugin->get_plugin_name() . ' add new',
             'Add new',
             'manage_options',
-            $this->_plugin->get_plugin_menu_slug() . '-add-new',
+            $this->_plugin->get_plugin_sub_menu_slug(),
             array($this, 'sub_menu_ui')
         );
     }
