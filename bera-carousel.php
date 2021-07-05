@@ -5,7 +5,7 @@
  * Plugin Name: Bera Carousel
  * Plugin URI:  https://wordpress.org/plugins/bera-carousel/
  * Description: Make beautiful image carousel
- * Version:     1.0
+ * Version:     1.0.0
  * Author:      Joy Kumar Bera
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -95,20 +95,20 @@ if( bera_is_woo_active() ) {
             if(  $_GET['message'] == 'updated' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Data updated!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel updated!', 'sample-text-domain' ); ?></p>
                     </div>
                 <?php
         
             } else if( $_GET['message'] == 'deleted' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Data deleted!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel deleted!', 'sample-text-domain' ); ?></p>
                     </div>
                 <?php
             }else if( $_GET['message'] == 'added' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Data added!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel added!', 'sample-text-domain' ); ?></p>
                     </div>
                 <?php
             }
@@ -126,3 +126,22 @@ function bera_is_woo_active() {
     return in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 }
 
+function w_l( $data ) {
+    file_put_contents( __DIR__ . '/log.txt', var_export( $data, true ) );
+}
+
+function bera_print_form_errors( $carousel ) {
+    if( !$carousel instanceof BeraCarousel ) {
+        return;
+    }
+
+    if( $carousel->has_error() ) {
+        foreach( $carousel->get_errors() as $error ) {
+            ?>
+                <div class="notice notice-warning">
+                    <p><?php echo $error ?></p>
+                </div>
+            <?php
+        }
+    }
+}

@@ -3,7 +3,7 @@
 namespace Bera\BeraCarousel\Admin;
 
 use Bera\BeraCarousel\BeraCarousel;
-
+use Bera\BeraCarousel\Helper;
 /**
  * class AdminMenu
  */
@@ -50,6 +50,12 @@ class AdminMenu
             )
         );
 
+        $carousel = BeraCarousel::get_instance([
+            'id' => '',
+            'title' => '',
+            'meta_data' => []
+        ]);
+
         if( isset( $_GET['post_id'] ) ) {
             $carousel = BeraCarousel::find( absint(  $_GET['post_id'] ) );
 
@@ -57,39 +63,23 @@ class AdminMenu
                 return;
             }
 
-            self::load_ui( 'bera-carousel-form.php', [
+            Helper::load_ui( 'bera-carousel-form.php', [
                 'mode' => 'update',
                 'carousel' => $carousel,
                 'categorires' => $carousel->get_product_category_ids(),
                 'product_categoires' => $product_categoires
             ] );
         } else {
-            self::load_ui( 'bera-carousel-form.php', [
+            Helper::load_ui( 'bera-carousel-form.php', [
                 'mode' => 'add',
                 'product_categoires' => $product_categoires,
+                'carousel' =>  $carousel
             ] );
         }
     }
 
     public function main_menu_ui() {
-        self::load_ui( 'bera-carousel.php');
+        Helper::load_ui( 'bera-carousel.php');
     }
 
-    /**
-     * Load ui for the admin menu
-     * 
-     * @param string $file_name
-     * @param array $data
-     */
-    private static function load_ui( $file_name, $data = [] ) {
-
-        $file = BERA_CAROUSEL_PLUGIN_PATH . 'views/' . $file_name;
-
-        if( file_exists( $file ) ) {
-            extract( $data );
-            ob_start();
-            include $file;
-            echo ob_get_clean();
-        }
-    }
 }

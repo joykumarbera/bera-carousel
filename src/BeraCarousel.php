@@ -31,6 +31,11 @@ class BeraCarousel {
     private static $_total_data;
 
     /**
+     * @var array $errors
+     */
+    private $errors = [];
+
+    /**
      * Constructor 
      * 
      * @param array $data
@@ -141,10 +146,21 @@ class BeraCarousel {
         return self::get_instance( $data );
     }
 
+    /**
+     * Get total items count
+     * 
+     * @return int
+     */
     public static function get_total_set() {
         return self::$_total_data;
     }
 
+    /**
+     * Find carousel by various arguments
+     * 
+     * @param array $args
+     * @return BeraCarousel[]
+     */
     public static function find_by( $args ) {
         
         $data_sets = [];
@@ -185,32 +201,29 @@ class BeraCarousel {
         
         $post_id = '';
 
-        if( $this->validate() ) {
-
-            if( $this->is_new() ) {
-                $post_id = wp_insert_post( 
-                        array(
-                        'post_title' => $this->title,
-                        'post_type' => self::POST_TYPE
-                    )
-                );
-            }
-            else {
-                $post_id = wp_update_post( 
-                        array(
-                        'ID' => $this->id,
-                        'post_title' => $this->title,
-                        'post_type' => self::POST_TYPE
-                    )
-                );
-            }
-
-            update_post_meta(
-                $post_id,
-                self::CAROUSEL_META_KEY,
-                $this->meta_data
+        if( $this->is_new() ) {
+            $post_id = wp_insert_post( 
+                    array(
+                    'post_title' => $this->title,
+                    'post_type' => self::POST_TYPE
+                )
             );
         }
+        else {
+            $post_id = wp_update_post( 
+                    array(
+                    'ID' => $this->id,
+                    'post_title' => $this->title,
+                    'post_type' => self::POST_TYPE
+                )
+            );
+        }
+
+        update_post_meta(
+            $post_id,
+            self::CAROUSEL_META_KEY,
+            $this->meta_data
+        );
 
         return $post_id;
     }
@@ -222,7 +235,35 @@ class BeraCarousel {
      */
     public function validate() {
 
-        return true;
+        if( $this->title == '' ) {
+            $this->add_error( 'Title can not be empty.' );
+        }
+
+        if( empty( $this->meta_data ) ) {
+            $this->add_error( 'Category can not be empty.' );
+        }
+    }
+
+    /**
+     * Add error message
+     * 
+     * @param string $error
+     */
+    public function add_error( $error ) {
+        $this->errors[] = $error;
+    }
+
+    public function get_errors() {
+        return $this->errors;
+    }
+
+    /**
+     * Check if model has any error
+     * 
+     * @return bool
+     */
+    public function has_error() {
+        return ( count( $this->errors ) > 0 ) ? true : false;
     }
 
     /**
