@@ -9,6 +9,7 @@ class BeraCarousel {
     
     const POST_TYPE = 'bera_carousel';
     const CAROUSEL_META_KEY = '_bera_carousel_cat_id';
+    const ERROR = 'bera_carousel_form_error';
 
     /**
      * @var int $id
@@ -251,10 +252,22 @@ class BeraCarousel {
      */
     public function add_error( $error ) {
         $this->errors[] = $error;
+
+        $error_list = get_option( self::ERROR );
+        if( $error_list == false ) {
+            add_option( self::ERROR, $this->errors );
+        } else {
+            update_option( self::ERROR, $this->errors );
+        }
     }
 
-    public function get_errors() {
-        return $this->errors;
+    /**
+     * Get all form errors
+     * 
+     * @return mixed
+     */
+    public static function get_all_errors() {
+        return get_option( self::ERROR );
     }
 
     /**
@@ -264,6 +277,14 @@ class BeraCarousel {
      */
     public function has_error() {
         return ( count( $this->errors ) > 0 ) ? true : false;
+    }
+
+    /**
+     * Remove all form error
+     * 
+     */
+    public static function remove_all_error() {
+        delete_option( self::ERROR );
     }
 
     /**

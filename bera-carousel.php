@@ -25,8 +25,8 @@ use Bera\BeraCarousel\BeraCarousel;
 define( 'BERA_CAROUSEL_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
 define( 'BERA_CAROUSEL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
-add_action('admin_init', 'check_woo');
-function check_woo() {
+add_action('admin_init', 'bera_check_woo');
+function bera_check_woo() {
     if ( ! bera_is_woo_active() ) {
         deactivate_plugins(  plugin_basename( __FILE__ ) );
         wp_die('Woocommerce is not active. For Bera Carousel need to work please install woocommerce.');
@@ -95,22 +95,33 @@ if( bera_is_woo_active() ) {
             if(  $_GET['message'] == 'updated' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Carousel updated!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel updated!', 'bera-carousel' ); ?></p>
                     </div>
                 <?php
         
             } else if( $_GET['message'] == 'deleted' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Carousel deleted!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel deleted!', 'bera-carousel' ); ?></p>
                     </div>
                 <?php
-            }else if( $_GET['message'] == 'added' ) {
+            } else if( $_GET['message'] == 'added' ) {
                 ?>
                     <div class="notice notice-success is-dismissible">
-                        <p><?php _e( 'Carousel added!', 'sample-text-domain' ); ?></p>
+                        <p><?php _e( 'Carousel added!', 'bera-carousel' ); ?></p>
                     </div>
                 <?php
+            } else if( $_GET['message'] == 'error' ) {
+                $errors =  BeraCarousel::get_all_errors();
+                if( $errors ) {
+                    foreach( $errors as $error ) {
+                        ?>
+                            <div class="notice notice-success is-dismissible">
+                                <p><?php _e( $error, 'bera-carousel' ); ?></p>
+                            </div>
+                        <?php
+                    }
+                }
             }
         }
     }
@@ -130,18 +141,8 @@ function w_l( $data ) {
     file_put_contents( __DIR__ . '/log.txt', var_export( $data, true ) );
 }
 
-function bera_print_form_errors( $carousel ) {
-    if( !$carousel instanceof BeraCarousel ) {
-        return;
-    }
-
-    if( $carousel->has_error() ) {
-        foreach( $carousel->get_errors() as $error ) {
-            ?>
-                <div class="notice notice-warning">
-                    <p><?php echo $error ?></p>
-                </div>
-            <?php
-        }
-    }
+add_action( 'bera_carousel_before_add', 'bera_remove_all_error' );
+add_action( 'bera_carousel_before_update', 'bera_remove_all_error' );
+function bera_remove_all_error() {
+    BeraCarousel::remove_all_error();
 }

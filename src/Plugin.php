@@ -44,7 +44,7 @@ class Plugin
     public function run() {
         (new AssetManager( $this ))->init();
         (new AdminMenu( $this ))->init();
-        (new FormHanlder() )->init();
+        (new FormHanlder( $this ) )->init();
     }
 
     /**
@@ -65,7 +65,6 @@ class Plugin
         return $this->_plugin_version;
     }
 
-
     /**
      * Get menu page slug
      */
@@ -73,6 +72,9 @@ class Plugin
         return str_replace(' ', '-', strtolower( $this->_plugin_name ) );
     }
 
+    /**
+     * Get sub menu page
+     */
     public function get_plugin_sub_menu_slug() {
         return $this->get_plugin_menu_slug() . '-add-new';
     }
