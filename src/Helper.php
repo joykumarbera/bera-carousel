@@ -24,4 +24,19 @@ class Helper
             echo ob_get_clean();
         }
     }
+
+    /**
+     * Get product categories
+     * 
+     * @return array
+     */
+    public static function get_product_categories() {
+        
+        return  get_terms( 
+                array(
+                'taxonomy' => 'product_cat',
+                'hide_empty' => false,
+            )
+        );
+    }
 }

@@ -1,3 +1,5 @@
 jQuery( document ).ready( function( $ ) {
-    $('.bera-woo-multiple-cat').select2();
+    $('.bera-woo-multiple-cat').select2({
+        width: 'resolve'
+    });
 } );

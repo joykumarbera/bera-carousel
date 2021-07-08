@@ -133,16 +133,16 @@ if( bera_is_woo_active() ) {
     bera_carousel_core()->run();
 }
 
+add_action( 'bera_carousel_before_add', 'bera_remove_all_error' );
+add_action( 'bera_carousel_before_update', 'bera_remove_all_error' );
+function bera_remove_all_error() {
+    BeraCarousel::remove_all_error();
+}
+
 function bera_is_woo_active() {
     return in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
 }
 
 function w_l( $data ) {
     file_put_contents( __DIR__ . '/log.txt', var_export( $data, true ) );
-}
-
-add_action( 'bera_carousel_before_add', 'bera_remove_all_error' );
-add_action( 'bera_carousel_before_update', 'bera_remove_all_error' );
-function bera_remove_all_error() {
-    BeraCarousel::remove_all_error();
 }
