@@ -1,1 +1,1 @@
-# A plugin for woocommerce product slider
+# A product carousel plugin for woocommerce
